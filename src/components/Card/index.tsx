@@ -10,18 +10,18 @@ import {
 interface CardComponentProps {
   title: string;
   description: string;
-  content: string;
+  content?: string;
 }
 
 export default function CardComponent({ title, description, content }: CardComponentProps) {
   return (
     <Card>
       <CardHeader>
-        <div className='flex items-center justify-center'>
+        <div className='flex items-center justify-left'>
           <CardTitle className='text-lg sm:text-xl text-gray-800 select-none'>
             {title}
           </CardTitle>
-          <DollarSign className='ml-auto w-4 h-4' />
+          {/* <DollarSign className='ml-auto w-4 h-4' /> */}
         </div>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
