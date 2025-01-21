@@ -3,16 +3,15 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 
-
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
 import { Sidebar } from "@/components/Sidebar";
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+// const geistMono = Geist_Mono({
+//   variable: "--font-geist-mono",
+//   subsets: ["latin"],
+// });
 
 export const metadata: Metadata = {
   title: "Hackaton - Frontend",
@@ -29,8 +28,8 @@ export default function RootLayout({
       <body
         className={cn("min-h-screen background font-sans antialiased", geistSans.className)}
       >
-        <Sidebar />
-        {children}
+       <Sidebar/>
+       {children}
       </body>
     </html>
   );

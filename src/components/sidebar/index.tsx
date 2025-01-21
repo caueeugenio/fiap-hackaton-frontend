@@ -28,7 +28,7 @@ export function Sidebar() {
         <nav className='flex flex-col items-center gap-4 px-2 py-5'>
           <TooltipProvider>
             <Link
-              href='#'
+              href='/home'
               className='flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full'
             >
               <Home className='h-5 w-5' />
@@ -46,20 +46,6 @@ export function Sidebar() {
                 </Link>
               </TooltipTrigger>
               <TooltipContent side='right'>Configurações</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href='#'
-                  className='flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground'
-                >
-                  <Users className='h-5 w-5  text-white' />
-                  <span className='sr-only'>Lançamento de presença</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side='right'>
-                Lançamento de presença
-              </TooltipContent>
             </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -143,14 +129,6 @@ export function Sidebar() {
                 >
                   <Settings className='h-5 w-5' />
                   Configurações
-                </Link>
-                <Link
-                  href='#'
-                  className='flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground'
-                  prefetch={false}
-                >
-                  <Users className='h-5 w-5' />
-                  Lançamento de presença
                 </Link>
                 <Link
                   href='#'
