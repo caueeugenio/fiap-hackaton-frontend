@@ -10,8 +10,14 @@ export default {
   theme: {
   	extend: {
   		colors: {
+			primary_background: '#CD6700',
+			secondary_background: '#262626',
+			tertiary_background: '#732B2B',
+			quaternary_background: '#491818',
   			background: '#262626',
 			header_background: '#231313',
+			button_primary: '#CD6700',
+			button_secondary: '#262626',
   			foreground: 'hsl(var(--foreground))',
   			card: {
   				DEFAULT: 'hsl(var(--card))',
