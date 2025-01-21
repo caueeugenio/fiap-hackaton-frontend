@@ -1,4 +1,10 @@
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet'
+import {
+  Sheet,
+  SheetTrigger,
+  SheetContent,
+  SheetTitle,
+  SheetDescription,
+} from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import {
@@ -94,14 +100,24 @@ export function Sidebar() {
         gap-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6'
         >
           <Sheet>
+            <SheetTitle />
             <SheetTrigger asChild>
-              <Button size='icon' variant='outline' className='sm:hidden bg-white'>
-                <PanelBottom className='w-5 h-5'></PanelBottom>
+              <Button
+                size='icon'
+                variant='outline'
+                className='sm:hidden bg-white'
+              >
+                <PanelBottom className='w-5 h-5' />
                 <span className='sr-only'>Abrir / fechar menu</span>
               </Button>
             </SheetTrigger>
 
-            <SheetContent side='left' className='sm:max-w-x bg-slate-100'>
+            <SheetContent
+              side='left'
+              className='sm:max-w-x bg-slate-100'
+              aria-describedby='Conteúdo da navbar'
+            >
+              <SheetDescription />
               <nav className='grid gap-6 text-lg font-medium'>
                 <Link
                   href='#'
