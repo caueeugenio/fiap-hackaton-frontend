@@ -4,8 +4,8 @@ import {
   SheetContent,
   SheetTitle,
   SheetDescription,
-} from '@/components/Ui/sheet'
-import { Button } from '@/components/Ui/button'
+} from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import {
   Settings,
@@ -20,7 +20,7 @@ import {
   TooltipContent,
   Tooltip,
   TooltipTrigger,
-} from '@/components/Ui/tooltip'
+} from '@/components/ui/tooltip'
 export function Sidebar() {
   return (
     <div className='flex w-full flex-col bg-muted/40'>

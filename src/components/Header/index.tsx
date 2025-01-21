@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '../Ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 export default function Header() {
   return (

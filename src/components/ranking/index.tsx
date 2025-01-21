@@ -5,8 +5,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '../Ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '../Ui/avatar'
+} from '../ui/card'
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 export function Ranking() {
   return (

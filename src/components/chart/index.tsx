@@ -1,7 +1,7 @@
 'use client'
 import { DollarSign } from 'lucide-react'
-import { Card, CardHeader, CardTitle, CardContent } from '../Ui/card'
-import { ChartConfig, ChartContainer } from '../Ui/chart'
+import { Card, CardHeader, CardTitle, CardContent } from '../ui/card'
+import { ChartConfig, ChartContainer } from '../ui/chart'
 import { Bar, CartesianGrid, XAxis, BarChart } from 'recharts'
 
 export default function ChartOverview() {
