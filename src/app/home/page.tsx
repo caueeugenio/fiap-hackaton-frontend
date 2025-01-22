@@ -57,7 +57,7 @@ export default function Home() {
         </div>
         <div className='bg-background p-6 shadow-md items-center w-full'>
           <h2 className='text-white text-xl font-bold mb-2 text-center'>
-            Status por disciplina
+            Desempenho por disciplina
           </h2>
           <div className='grid sm:grid-cols-1 lg:grid-cols-3 gap-4 lg:h-full sm:pb-6 lg:pb-0'>
             {subjects.map((subject, index) => (
