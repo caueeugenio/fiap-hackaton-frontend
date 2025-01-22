@@ -20,9 +20,9 @@ export default function MyQuizzesPage() {
           Meus Quizzes
         </h1>
         <h2 className='text-left text-white pb-4 text-lg'>{subject}</h2>
-        <div className='grid lg:grid-cols-3 gap-4'>
+        <div className='grid lg:grid-cols-3 gap-7'>
           {quizzes.map((quiz, index) => (
-            <QuizCard key={index} title={quiz.title} content={quiz.average} />
+            <QuizCard key={index} title={quiz.title} rate={quiz.average} />
           ))}
         </div>
       </div>

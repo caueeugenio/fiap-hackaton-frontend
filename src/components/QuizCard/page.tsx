@@ -8,10 +8,10 @@ import {
 
 interface QuizCarProps {
   title: string
-  content?: number
+  rate?: number
 }
 
-export default function QuizCard({ title, content }: QuizCarProps) {
+export default function QuizCard({ title, rate }: QuizCarProps) {
   return (
     <Card className='flex flex-col sm:flex-row w-full sm:w-[533px] '>
       <CardHeader className='flex-1'>
@@ -24,11 +24,11 @@ export default function QuizCard({ title, content }: QuizCarProps) {
 
       <CardContent className='flex-1 p-0'>
         <div
-          className='bg-primary_background flex justify-center rounded-lg'
-          style={{ height: '100%' }}
+          className='bg-primary_background flex justify-center'
+          style={{ height: '100%', borderRadius: '0 .5rem .5rem 0' }}
         >
-          <p className='text-base sm:text-lg font-bold text-white flex items-center justify-center h-full'>
-            {content}
+          <p className='text-base lg:text-xl font-bold text-white flex items-center justify-center h-full'>
+            {rate}
           </p>
         </div>
       </CardContent>
