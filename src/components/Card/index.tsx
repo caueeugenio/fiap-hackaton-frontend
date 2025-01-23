@@ -8,20 +8,28 @@ import {
 } from '../ui/card'
 
 interface CardComponentProps {
-  title: string;
-  description: string;
-  content?: string;
+  title: string
+  description: string
+  content?: string
+  customHeight?: string
 }
 
-export default function CardComponent({ title, description, content }: CardComponentProps) {
+export default function CardComponent({
+  title,
+  description,
+  content,
+  customHeight,
+}: CardComponentProps) {
   return (
-    <Card>
+    <Card className={`${customHeight ? `h-[${customHeight}]` : 'h-[200px] '}`}>
       <CardHeader>
-        <div className='flex items-center justify-left'>
+        <div className='flex items-center justify-between'>
           <CardTitle className='text-lg sm:text-xl text-gray-800 select-none'>
             {title}
           </CardTitle>
-          {/* <DollarSign className='ml-auto w-4 h-4' /> */}
+            <button className='ml-auto bg-primary_background text-white px-4 py-2 rounded'>
+              Iniciar Quiz
+            </button>
         </div>
         <CardDescription>{description}</CardDescription>
       </CardHeader>

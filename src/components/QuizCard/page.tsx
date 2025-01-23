@@ -9,17 +9,31 @@ import {
 interface QuizCarProps {
   title: string
   rate?: number
+  customWidth?: string
+  description?: string
 }
 
-export default function QuizCard({ title, rate }: QuizCarProps) {
+export default function QuizCard({
+  title,
+  rate,
+  customWidth,
+  description,
+}: QuizCarProps) {
   return (
-    <Card className='flex flex-col sm:flex-row w-full sm:w-[533px] '>
+    <Card
+      className={`flex flex-col sm:flex-row w-full flex-1 ${
+        customWidth ? `w-[${customWidth}]` : 'w-[533px]'
+      }`}
+    >
       <CardHeader className='flex-1'>
         <div className='flex items-center justify-left'>
           <CardTitle className='text-lg sm:text-xl text-gray-800 select-none lg:text-lg'>
             {title}
           </CardTitle>
         </div>
+        <CardDescription className='flex flex-wrap text-left mt-2'>
+            {description}
+          </CardDescription>
       </CardHeader>
 
       <CardContent className='flex-1 p-0'>
