@@ -8,7 +8,7 @@ import {
 
 interface QuizCarProps {
   title: string
-  rate?: number
+  rate?: string
   customWidth?: string
   description?: string
 }

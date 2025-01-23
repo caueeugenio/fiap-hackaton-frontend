@@ -30,10 +30,10 @@ export default function Home() {
   ])
 
   const [latestQuizzes, setTests] = useState([
-    { name: 'Biologia Celular - Organelas', grade: 7, average: 7.5 },
-    { name: 'Biologia Celular - Organelas', grade: 7, average: 7.5 },
-    { name: 'Biologia Celular - Organelas', grade: 7, average: 7.5 },
-    { name: 'Biologia Celular - Organelas', grade: 7, average: 7.5 },
+    { name: 'Biologia Celular - Organelas', grade: '7.0', average: 7.5 },
+    { name: 'Biologia Celular - Organelas', grade: '7.0', average: 7.5 },
+    { name: 'Biologia Celular - Organelas', grade: '7.0', average: 7.5 },
+    { name: 'Biologia Celular - Organelas', grade: '7.0', average: 7.5 },
   ])
   const [pending, setQuestions] = useState([
     {
@@ -62,9 +62,9 @@ export default function Home() {
               <QuizCard
                 key={index}
                 title={quiz.name}
-                rate={quiz.average}
+                rate={quiz.grade}
                 customWidth='w-[433px]'
-                description={`Nota: ${quiz.grade}`}
+                description={`Média ${quiz.average}`}
               />
             ))}
             <Button
