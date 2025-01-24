@@ -2,7 +2,7 @@
 import CardComponent from '@/components/Card'
 import Header from '@/components/Header'
 import { ProgressBar } from '@/components/ProgressBar'
-import 'react-circular-progressbar/dist/styles.css'
+//import 'react-circular-progressbar/dist/styles.css'
 import { useState } from 'react'
 
 export default function Home() {
