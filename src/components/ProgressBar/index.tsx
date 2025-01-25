@@ -13,5 +13,5 @@ export function ProgressBar({ targetProgress }: { targetProgress: number }) {
     return () => clearTimeout(timer)
   }, [targetProgress])
 
-  return <Progress value={progress} className="w-[60%]" />
+  return <Progress value={progress} className="mr-2" />
 }
