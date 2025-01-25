@@ -64,7 +64,7 @@ export default function Home() {
           >
             Últimos quizzes
           </h2>
-          <div className='grid grid-cols-2 gap-6'>
+          <div className='grid grid-cols-2 gap-6 md:flex flex-col'>
             {latestQuizzes.map((quiz, index) => (
               <QuizCard
                 key={index}
@@ -107,20 +107,20 @@ export default function Home() {
           >
             Pendências
           </h2>
-            <div className='grid grid-cols-1 gap-3'>
+          <div className='grid grid-cols-1 gap-3'>
             {pending.map((task, index) => (
               <div key={index} className='flex justify-center items-center'>
-              <CardComponent
-                title={task.title}
-                description={task.description}
-                customHeight='100px'
-              />
-              <button className='bg-primary_background text-white p-3 rounded ml-4'>
-                Iniciar Quiz
-              </button>
+                <CardComponent
+                  title={task.title}
+                  description={task.description}
+                  customHeight='100px md:50px'
+                />
+                <button className='bg-primary_background text-white p-3 rounded ml-4'>
+                  Iniciar Quiz
+                </button>
               </div>
             ))}
-            </div>
+          </div>
         </div>
       </section>
     </main>

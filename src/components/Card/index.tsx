@@ -31,14 +31,14 @@ export default function CardComponent({
     >
       <CardHeader>
         <div className='flex items-center justify-between'>
-          <CardTitle className='text-lg sm:text-xl text-gray-800 select-none'>
+          <CardTitle className='text-lg sm:text-xl md:text-sm text-gray-800 select-none'>
             {title}
           </CardTitle>
         </div>
-        <CardDescription>{description}</CardDescription>
+        <CardDescription className='md:text-sm'>{description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <p className='text-base sm:text-lg font-bold'>{content}</p>
+        <p className='text-base sm:text-lg md:text-sm font-bold'>{content}</p>
       </CardContent>
     </Card>
   )
