@@ -42,7 +42,11 @@ export default function Login() {
             required
           />
         </div>
-        <Button className='w-full mt-7 bg-button_primary' type='submit' onClick={() => router.push('/home')}>
+        <Button
+          className='w-full mt-7 bg-button_primary'
+          type='submit'
+          onClick={() => router.push('/home')}
+        >
           Login
         </Button>
       </form>

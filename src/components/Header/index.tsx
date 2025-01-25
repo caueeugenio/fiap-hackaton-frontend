@@ -1,17 +1,25 @@
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
-export default function Header() {
+interface Avatar {
+  userName: string
+  className: string
+  grade: string
+  photo?: string
+}
+export default function Header({ userName, className, grade, photo }: Avatar) {
   return (
     <header className='header'>
-      <div className='flex items-center bg-header_background'>
-        <div className='p-10 flex items-center'>
+      <div className='flex items-center justify-center bg-header_background h-full'>
+        <div className='flex items-center md:flex-col'>
           <Avatar className='lg:w-60 lg:h-60'>
-            <AvatarImage src='https://github.com/shadcn.png' />
+            <AvatarImage src={photo} />
             <AvatarFallback>Avatar</AvatarFallback>
           </Avatar>
           <div className='text-white p-6'>
-            <p className='sm:text-lg lg:text-4xl'>João da Silva</p>
-            <p className='sm:text-lg lg:text-2xl'>5ª Serie - Turma XPTO</p>
+            <p className='text-3xl md:text-4xl lg:text-4xl '>{userName}</p>
+            <p className='text-lg md:text-1xl lg:text-2xl '>
+              {grade} - {className}
+            </p>
           </div>
         </div>
       </div>

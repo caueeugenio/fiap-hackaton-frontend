@@ -12,6 +12,7 @@ interface CardComponentProps {
   description: string
   content?: string
   customHeight?: string
+  customWidth?: string
 }
 
 export default function CardComponent({
@@ -19,17 +20,20 @@ export default function CardComponent({
   description,
   content,
   customHeight,
+  customWidth,
 }: CardComponentProps) {
   return (
-    <Card className={`${customHeight ? `h-[${customHeight}]` : 'h-[200px] '}`}>
+    <Card
+      className={`
+      ${customHeight ? `h-[${customHeight}]` : 'h-[200px] '}
+      ${customWidth ? `w-[${customWidth}]` : 'w-full'}
+      `}
+    >
       <CardHeader>
         <div className='flex items-center justify-between'>
           <CardTitle className='text-lg sm:text-xl text-gray-800 select-none'>
             {title}
           </CardTitle>
-            <button className='ml-auto bg-primary_background text-white px-4 py-2 rounded'>
-              Iniciar Quiz
-            </button>
         </div>
         <CardDescription>{description}</CardDescription>
       </CardHeader>
