@@ -7,6 +7,7 @@ import QuizCard from '@/components/QuizCard/page'
 import { Roboto } from 'next/font/google'
 import { Inter } from 'next/font/google'
 import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
 const roboto = Roboto({
   weight: ['400', '700'],
   subsets: ['latin'],
@@ -16,6 +17,7 @@ const inter = Inter({
   subsets: ['latin'],
 })
 export default function Home() {
+  const router = useRouter()
   const [subjects, setSubjects] = useState([
     { name: 'Português', progress: 100 },
     { name: 'Matemática', progress: 80 },
@@ -46,9 +48,14 @@ export default function Home() {
   ])
   return (
     <main className='sm:ml-14 h-screen'>
-      <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 h-full'>
-        <div className='p-6 shadow-md bg-header_background'>
-          <Header />
+      <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  h-full'>
+        <div className='p-6 sm:p-6 shadow-md bg-header_background flex justify-center items-center'>
+          <Header
+            userName='João da Silva'
+            className='Turma XPTO'
+            grade='5ª Serie'
+            photo='https://github.com/shadcn.png'
+          />
         </div>
         <div className='p-6 shadow-md bg-quaternary_background'>
           <h2
@@ -63,10 +70,12 @@ export default function Home() {
                 title={quiz.name}
                 rate={quiz.grade}
                 customWidth='w-[433px]'
+                customHeight='h-[100px]'
                 description={`Média ${quiz.average}`}
               />
             ))}
             <Button
+              onClick={() => router.push('/my-quizzes')}
               className={`${roboto.className} text-[18px] col-span-2 p-6 w-full mt-7 bg-button_primary`}
               type='submit'
             >
@@ -93,18 +102,22 @@ export default function Home() {
         </div>
         <div className=' p-6 shadow-md bg-tertiary_background'>
           <h2
-            className={`${roboto.className} text-white text-center pb-4 text-[30px] text-white text-xl font-bold mb-2 text-center'`}
+            className={`${roboto.className} text-[30px] text-white text-center pb-4  text-white font-bold mb-2 text-center'`}
           >
             Pendências
           </h2>
           <div className='grid grid-cols-1 gap-3'>
             {pending.map((task, index) => (
-              <CardComponent
-                key={index}
-                title={task.title}
-                description={task.description}
-                customHeight='h-[100px]'
-              />
+              <div key={index} className='flex justify-center items-center'>
+                <CardComponent
+                  title={task.title}
+                  description={task.description}
+                  customHeight='100px md:50px'
+                />
+                <button className='bg-primary_background text-white p-3 rounded ml-4'>
+                  Iniciar Quiz
+                </button>
+              </div>
             ))}
           </div>
         </div>

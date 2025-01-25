@@ -4,12 +4,12 @@ import { useState } from 'react'
 
 export default function MyQuizzesPage() {
   const [quizzes, setQuizzes] = useState([
-    { title: 'Biologia Celular - Organelas', average: 7.5 },
-    { title: 'Biologia Celular - Organelas', average: 7.5 },
-    { title: 'Biologia Celular - Organelas', average: 7.5 },
-    { title: 'Biologia Celular - Organelas', average: 7.5 },
-    { title: 'Biologia Celular - Organelas', average: 7.5 },
-    { title: 'Biologia Celular - Organelas', average: 7.5 },
+    { title: 'Biologia Celular - Organelas', average: '7.5' },
+    { title: 'Biologia Celular - Organelas', average: '7.5' },
+    { title: 'Biologia Celular - Organelas', average: '7.5' },
+    { title: 'Biologia Celular - Organelas', average: '7.5' },
+    { title: 'Biologia Celular - Organelas', average: '7.5' },
+    { title: 'Biologia Celular - Organelas', average: '7.5' },
   ])
   const subject = 'Biologia'
 
@@ -22,7 +22,13 @@ export default function MyQuizzesPage() {
         <h2 className='text-left text-white pb-4 text-lg'>{subject}</h2>
         <div className='grid lg:grid-cols-3 gap-7'>
           {quizzes.map((quiz, index) => (
-            <QuizCard key={index} title={quiz.title} rate={quiz.average} />
+            <QuizCard 
+            key={index} 
+            title={quiz.title} 
+            rate={quiz.average} 
+            customHeight='h-[100px]'	
+            description={`Média ${quiz.average}`}
+            />
           ))}
         </div>
       </div>
