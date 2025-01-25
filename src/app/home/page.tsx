@@ -2,7 +2,6 @@
 import CardComponent from '@/components/Card'
 import Header from '@/components/Header'
 import { ProgressBar } from '@/components/ProgressBar'
-// import 'react-circular-progressbar/dist/styles.css'
 import { useState } from 'react'
 import QuizCard from '@/components/QuizCard/page'
 import { Roboto } from 'next/font/google'
