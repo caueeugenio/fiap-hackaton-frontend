@@ -2,7 +2,7 @@
 import CardComponent from '@/components/Card'
 import Header from '@/components/Header'
 import { ProgressBar } from '@/components/ProgressBar'
-import 'react-circular-progressbar/dist/styles.css'
+// import 'react-circular-progressbar/dist/styles.css'
 import { useState } from 'react'
 import QuizCard from '@/components/QuizCard/page'
 import { Roboto } from 'next/font/google'
@@ -83,8 +83,8 @@ export default function Home() {
           </h2>
           <div className='grid grid-cols-1 pb-6 w-full'>
             {subjects.map((subject, index) => (
-              <div key={index} className='flex items-center justify-center'>
-                <p className='text-gray-400 text-lg w-1/2 text-center'>
+              <div key={index} className='flex items-center gap-4'>
+                <p className='text-gray-400 text-lg w-[30%] text-right'>
                   {subject.name}
                 </p>
                 <ProgressBar targetProgress={subject.progress} />

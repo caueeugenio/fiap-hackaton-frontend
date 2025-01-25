@@ -18,7 +18,7 @@ const Progress = React.forwardRef<
   React.ElementRef<typeof ProgressPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
 >(({ className, value, ...props }, ref) => (
-  <div className='w-full flex justify-end'>
+  <div className='w-full flex justify-start'>
     <ProgressPrimitive.Root
       ref={ref}
       className={cn(
