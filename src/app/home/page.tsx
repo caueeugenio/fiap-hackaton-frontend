@@ -2,7 +2,6 @@
 import CardComponent from '@/components/Card'
 import Header from '@/components/Header'
 import { ProgressBar } from '@/components/ProgressBar'
-import 'react-circular-progressbar/dist/styles.css'
 import { useState } from 'react'
 import QuizCard from '@/components/QuizCard/page'
 import { Roboto } from 'next/font/google'
@@ -18,7 +17,7 @@ const inter = Inter({
   subsets: ['latin'],
 })
 export default function Home() {
-  const router = useRouter();
+  const router = useRouter()
   const [subjects, setSubjects] = useState([
     { name: 'Português', progress: 100 },
     { name: 'Matemática', progress: 80 },
@@ -64,7 +63,7 @@ export default function Home() {
           >
             Últimos quizzes
           </h2>
-          <div className='grid grid-cols-2 gap-6 md:flex flex-col'>
+          <div className='grid grid-cols-2 gap-6'>
             {latestQuizzes.map((quiz, index) => (
               <QuizCard
                 key={index}
