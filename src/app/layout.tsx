@@ -8,7 +8,7 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-import { Sidebar } from "@/components/Sidebar";
+import { Sidebar } from "@/components/sidebar"; 
 // const geistMono = Geist_Mono({
 //   variable: "--font-geist-mono",
 //   subsets: ["latin"],

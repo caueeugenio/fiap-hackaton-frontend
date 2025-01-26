@@ -114,7 +114,8 @@ export default function Home() {
                   description={task.description}
                   customHeight='100px md:50px'
                 />
-                <button className='bg-primary_background text-white p-3 rounded ml-4'>
+                <button className='bg-primary_background text-white p-3 rounded ml-4'
+                onClick={() => router.push('/questionnaire')}>
                   Iniciar Quiz
                 </button>
               </div>
