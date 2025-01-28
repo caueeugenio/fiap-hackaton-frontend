@@ -1,5 +1,7 @@
+"use client"
 import { Pencil, CircleX } from 'lucide-react';
-import { FormEvent, useState } from 'react';
+import { FormEvent} from 'react';
+import { useState } from 'react';
 import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from '../ui/button';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
@@ -9,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 interface Props {
     question_id: number,
     question: string,
-    answer: boolean
+    answer?: boolean 
 }
 
 export default function QuestionBox({question_id, question, answer}: Props) {
@@ -19,7 +21,7 @@ export default function QuestionBox({question_id, question, answer}: Props) {
     
     const [newQuestionContent, setNewQuestionContent] = useState<string>('');
     const [newQuestionAnswer, setNewQuestionAnswer] = useState<boolean | null>(null);
-    
+    const [studentAnswer, setStudentAnswer] = useState<boolean>(false)
     const { toast } = useToast();
     
     function handleQuestionUpdate(e: FormEvent) {
@@ -44,27 +46,47 @@ export default function QuestionBox({question_id, question, answer}: Props) {
     
     return (
         <div key={question_id} className="flex flex-col">
-            <div className="flex gap-4">
+            <div className="flex items-center gap-4">
                 <div className="bg-[#CD6700] text-primary-foreground p-2 flex w-full rounded-sm justify-between items-center">
                     <div className="flex-1">{question_id}. {question}</div>
-                    <div className="flex p-2 gap-2">
+                        {answer && <div className="flex p-2 gap-2">
                         <Pencil className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenEditDialog(true)} />
                         <CircleX className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenDeleteDialog(true)} />
-                    </div>
+                        </div>}
                 </div>
-                <div className="gap-2 flex align-center justify-center">
+                <div className="gap-2 flex max-h-14">
                     {
-                        answer ? (
-                            <>
-                                <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">V</span>
-                                <span className="bg-white p-4 rounded-sm">F</span>
-                            </>
+                      answer == null ? (
+                        <>
+                            <span onClick={()=>{
+                                setStudentAnswer(true)}
+                                } 
+                                className={`${studentAnswer ? (
+                                "bg-[#CD6700] p-4 text-primary-foreground rounded-sm"
+                            ) : (
+                                "bg-white p-4 rounded-sm")
+                                }`}>V</span>
+                            <span onClick={()=>{
+                                setStudentAnswer(false)}
+                                } 
+                                className={`${studentAnswer ? (
+                                    "bg-white p-4 rounded-sm"
+                                 ) : (
+                                    "bg-[#CD6700] p-4 text-primary-foreground rounded-sm")
+                                    }`}>F</span>
+                        </>
+                      ):(answer ? (
+                        <>
+                            <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">V</span>
+                            <span className="bg-white p-4 rounded-sm">F</span>
+                        </>
                         ):(
-                            <>
-                                <span className="bg-white p-4 rounded-sm">V</span>
-                                <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">F</span>
-                            </>
-                        ) 
+                        <>
+                            <span className="bg-white p-4 rounded-sm">V</span>
+                            <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">F</span>
+                        </>
+                     ) 
+                    )
                     }
                 </div>
                 
