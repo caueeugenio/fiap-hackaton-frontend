@@ -106,7 +106,7 @@ export default function NewQuestionnaire() {
       `
         gere ${questionsCount} perguntas de verdadeiro ou falso sobre o conteúdo ${content}, 
         me retorne essas perguntas no seguinte formato de texto -> a pergunta em si e a resposta separada por :,
-        exemplo de resposta -> A biologia celular é o ramo da biologia que estuda os órgãos humanos : F,
+        exemplo de resposta -> A biologia celular é o ramo da biologia que estuda os órgãos humanos : F ou A biologia celular é o ramo da biologia que estuda os órgãos humanos : V
         nao precisa mandar o numero da pergunta e nem a letra e cada questao separada por quebra de linha.
       `
     )
