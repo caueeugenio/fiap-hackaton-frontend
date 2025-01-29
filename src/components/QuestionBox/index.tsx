@@ -62,17 +62,17 @@ export default function QuestionBox({question_id, question, answer}: Props) {
                                 setStudentAnswer(true)}
                                 } 
                                 className={`${studentAnswer ? (
-                                "bg-[#CD6700] p-4 text-primary-foreground rounded-sm"
+                                "bg-[#CD6700] p-4 text-primary-foreground rounded-sm cursor-pointer"
                             ) : (
-                                "bg-white p-4 rounded-sm")
+                                "bg-white p-4 rounded-sm cursor-pointer")
                                 }`}>V</span>
                             <span onClick={()=>{
                                 setStudentAnswer(false)}
                                 } 
                                 className={`${studentAnswer ? (
-                                    "bg-white p-4 rounded-sm"
+                                    "bg-white p-4 rounded-sm cursor-pointer"
                                  ) : (
-                                    "bg-[#CD6700] p-4 text-primary-foreground rounded-sm")
+                                    "bg-[#CD6700] p-4 text-primary-foreground rounded-sm cursor-pointer")
                                     }`}>F</span>
                         </>
                       ):(answer ? (
