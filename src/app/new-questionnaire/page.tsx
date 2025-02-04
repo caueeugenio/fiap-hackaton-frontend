@@ -7,23 +7,10 @@ import TextArea from "@/components/TextArea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
 
 import { useState } from "react";
 
-// TODO: Handle errors in forms
-
-const questionsMock = [
-    {"id": 1, "question": "A biologia celular é o ramo da biologia que estuda os órgãos humanos.", "answer": false},
-    {"id": 2, "question": "A biologia celular abrange tanto as celular procarióticas como eucarióticas.", "answer": true},
-    {"id": 3, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-    {"id": 4, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-    {"id": 5, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-    {"id": 6, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-    {"id": 7, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-    {"id": 8, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-    {"id": 9, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-    {"id": 10, "question": "Os ribossomos são responsáveis pela síntese de proteína na célula.", "answer": true},
-]
 
 const topicsAvailableMock = [
     {"id": 1, "topic": "Biologia"},
@@ -38,13 +25,42 @@ const studentClassesMock = [
 ]
 
 export default function NewQuestionnaire() {
-    
+  const fetchQuestions = async (text: string) => {
+    try {
+      const response = await axios.post('http://localhost:3001/ia', {
+        text,
+      })
+      // Formata as perguntas recebidas da resposta da API
+      const formattedQuestions = response.data
+        // Divide a resposta em linhas
+        .split('\n')
+        // Filtra as linhas que não estão vazias e ignora a primeira linha (index !== 0)
+        .filter(
+          (line: string, index: number) => line.trim() !== '' && index !== 0
+        )
+        .map((line: string, index: number) => {
+          // Divide a linha em pergunta e resposta usando ':' como delimitador
+          const [question, answer] = line.split(':')
+          // Retorna um objeto com a pergunta formatada
+          return {
+            id: index + 1,
+            question: question.trim(), // Remove espaços em branco da pergunta
+            answer: answer?.includes('V') ? true : false,
+          }
+        })
+      setQuestions(formattedQuestions)
+      setShowQuestions(true)
+      console.log(response.data)
+    } catch (error) {
+      console.error('Error posting data to Ollama API:', error)
+    }
+  }
     const [quizName, setQuizName] = useState<string>('');
     const [content, setContent] = useState<string>('');
     const [questionsCount, setQuestionsCount] = useState<number>(0);
     const [showQuestions, setShowQuestions] = useState<boolean>(false);
     
-    const [questions, setQuestions] = useState(questionsMock);
+    const [questions, setQuestions] = useState<any[]>([]);
     
     const [topics, setTopics] = useState(topicsAvailableMock);
     const [selectedTopic, setSelectedTopic] = useState<string>('');
@@ -64,9 +80,16 @@ export default function NewQuestionnaire() {
             return
         }
         console.log({questionsCount, quizName, content});
-        setShowQuestions(true);
-    }
-    
+
+        fetchQuestions(
+        `
+            gere ${questionsCount} perguntas de verdadeiro ou falso sobre o conteúdo ${content}, 
+            me retorne essas perguntas no seguinte formato de texto -> a pergunta em si e a resposta separada por :,
+            exemplo de resposta -> A biologia celular é o ramo da biologia que estuda os órgãos humanos : F ou A biologia celular é o ramo da biologia que estuda os órgãos humanos : V
+            nao precisa mandar o numero da pergunta e nem a letra e cada questao separada por quebra de linha.
+        `
+        )
+  }
     function handleQuestionnaireSubmit(e: React.FormEvent) {
         e.preventDefault();
         if (selectedTopic === "" || selectedStudentClass === "") {
@@ -87,7 +110,7 @@ export default function NewQuestionnaire() {
         setShowQuestions(false);
         
     }
-    
+
     
     return (
         <main className="bg-tertiary_background flex flex-col items-center min-h-screen">
