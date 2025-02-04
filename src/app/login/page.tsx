@@ -15,7 +15,6 @@ export default function Login() {
     setError('')
     try {
       const user = await login(email, password)
-      console.log(user)
       if (user.access_token) {
         router.push('/home')
       } else {
