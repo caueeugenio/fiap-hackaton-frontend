@@ -4,15 +4,25 @@ import { Input } from '@/components/ui/input'
 import { useState } from 'react'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { login } from '@/api/auth'
 export default function Login() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const router = useRouter()
-
-  const handleSubmit = (event: React.FormEvent) => {
+  const [error, setError] = useState('')
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    console.log('Email:', email)
-    console.log('Password:', password)
+    setError('')
+    try {
+      const user = await login(email, password)
+      if (user.access_token) {
+        router.push('/home')
+      } else {
+        setError('Usuário não encontrado.')
+      }
+    } catch (err) {
+      setError('Erro ao fazer login. Tente novamente.')
+    }
   }
 
   return (
@@ -42,14 +52,11 @@ export default function Login() {
             required
           />
         </div>
-        <Button
-          className='w-full mt-7 bg-button_primary'
-          type='submit'
-          onClick={() => router.push('/home')}
-        >
+        <Button className='w-full mt-7 bg-button_primary' type='submit'>
           Login
         </Button>
       </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   )
 }
