@@ -9,7 +9,7 @@ export const useConfirmationModal = (handleConfirmation: (arg: string) => Promis
 
   const handleOpenModal = (prop: string) => () => {
     setModalOpen(true)
-    prop && setArg(prop);
+    if(prop) setArg(prop);
   };
   
   const handleCloseModal = () => {

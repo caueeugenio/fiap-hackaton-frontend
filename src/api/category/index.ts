@@ -1,8 +1,9 @@
 import { AxiosError } from 'axios';
 import api from '@/api/lib/axios';
 import { getErrorMessage } from '../utils/functions';
+import { Category, Result } from '@/types/globals';
 
-export const getYears = async () => {
+export const getYears = async (): Promise<Result<Category[]>>  => {
   try {
     const { data } = await api.get('/category/years');
 
@@ -14,7 +15,7 @@ export const getYears = async () => {
   }
 }
 
-export const getClasses = async () => {
+export const getClasses = async (): Promise<Result<Category[]>>  => {
   try {
     const { data } = await api.get('/category/classes');
 
@@ -25,7 +26,7 @@ export const getClasses = async () => {
     return { success: false, error: message}
   }
 }
-export const getGrades = async () => {
+export const getGrades = async (): Promise<Result<Category[]>>  => {
   try {
     const { data } = await api.get('/category/grades');
 
@@ -36,7 +37,7 @@ export const getGrades = async () => {
     return { success: false, error: message}
   }
 }
-export const getSubjects = async () => {
+export const getSubjects = async (): Promise<Result<Category[]>>  => {
   try {
     const { data } = await api.get('/category/subjects');
 

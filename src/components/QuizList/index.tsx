@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   Edit as EditIcon,
   BarChart2 as BarChartIcon,
@@ -9,135 +9,135 @@ import {
 import { useConfirmationModal } from "@/components/ConfirmationModal/hooks/useConfirmationModal";
 import { ConfirmationModal } from "@/components/ConfirmationModal";
 import { debounce } from "@/lib/utils";
+import { getClasses, getGrades, getSubjects, getYears } from "@/api/category";
+import { Category, QuestionnaireBase } from "@/types/globals";
+import {
+  deleteQuestionnaire,
+  getQuestionnairesByTeacher,
+} from "@/api/questionnaire";
+import { useUserContext } from "@/context/userContext";
+import { getTeacher } from "@/api/user";
 
-const quizzes = [
-  {
-    title: "Biologia Celular - Organelas",
-    status: "10 / 35",
-    year: "2020",
-    grade: "5EF",
-    class: "A",
-    id: "1",
-  },
-  {
-    title: "Biologia Celular - Organelas",
-    status: "★ novo",
-    year: "2020",
-    grade: "5EF",
-    class: "B",
-    id: "2",
-  },
-  {
-    title: "Biologia Celular - Organelas",
-    status: "Finalizado",
-    year: "2020",
-    grade: "5EF",
-    class: "C",
-    id: "3",
-  },
-  {
-    title: "Biologia Celular - Membrana Plasmática",
-    status: "",
-    year: "2020",
-    grade: "5EF",
-    class: "A",
-    id: "4",
-  },
-  {
-    title: "Biologia Celular - Divisão Celular",
-    status: "",
-    year: "2020",
-    grade: "6EF",
-    class: "A",
-    id: "5",
-  },
-  {
-    title: "Biologia Celular - Divisão Celular",
-    status: "",
-    year: "2020",
-    grade: "6EF",
-    class: "B",
-    id: "6",
-  },
-  {
-    title: "Biologia Celular - Citoplasma",
-    status: "",
-    year: "2020",
-    grade: "6EF",
-    class: "A",
-    id: "7",
-  },
-];
-const yearsList = [
-  { label: 2025, value: 2025 },
-  { label: 2024, value: 2024 },
-  { label: 2023, value: 2023 },
-  { label: 2022, value: 2022 },
-  { label: 2021, value: 2021 },
-  { label: 2020, value: 2020 },
-];
-const gradesList = [
-  { label: "1ª Série", value: "1EF" },
-  { label: "2ª Série", value: "2EF" },
-  { label: "3ª Série", value: "3EF" },
-  { label: "4ª Série", value: "4EF" },
-  { label: "5ª Série", value: "5EF" },
-  { label: "6ª Série", value: "6EF" },
-  { label: "7ª Série", value: "7EF" },
-  { label: "8ª Série", value: "8EF" },
-  { label: "1ª Ano", value: "1EM" },
-  { label: "2ª Ano", value: "2EM" },
-  { label: "3ª Ano", value: "3EM" },
-];
-const classesList = [
-  { label: "A", value: "A" },
-  { label: "B", value: "B" },
-  { label: "C", value: "C" },
-  { label: "D", value: "D" },
-  { label: "E", value: "E" },
-  { label: "F", value: "F" },
-  { label: "G", value: "G" },
-  { label: "H", value: "H" },
-];
-
-const QuizList = () => {
-  const [quizList, setQuizList] = useState(quizzes);
+const QuestionnaireList = () => {
+  const [isLoading, setLoading] = useState(false);
+  const [questionnaireList, setQuestionnaireList] = useState<
+    QuestionnaireBase[]
+  >([]);
+  const [questionnaireFiltered, setQuestionnaireFiltered] = useState<
+    QuestionnaireBase[]
+  >([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [year, setYear] = useState("");
   const [grade, setGrade] = useState("");
   const [class_, setClass] = useState("");
+  const [subject, setSubject] = useState("");
+  const [filtersLists, setFiltersLists] = useState<{ [x: string]: Category[] }>(
+    {
+      years: [],
+      grades: [],
+      classes: [],
+      subjects: [],
+    }
+  );
+
+  const { user } = useUserContext();
+
+  const loadFilters = useCallback(async () => {
+    setLoading(true);
+    const yearsResp = await getYears();
+    const gradesResp = await getGrades();
+    const classesResp = await getClasses();
+    const subjectsResp = await getSubjects();
+    const teacher = await getTeacher(user.id);
+
+    if (yearsResp.success) {
+      setFiltersLists((prev) => ({ ...prev, years: yearsResp.value }));
+    }
+
+    if (gradesResp.success) {
+      setFiltersLists((prev) => ({ ...prev, grades: gradesResp.value }));
+    }
+
+    if (classesResp.success) {
+      setFiltersLists((prev) => ({ ...prev, classes: classesResp.value }));
+    }
+
+    if (subjectsResp.success && teacher.success) {
+      const teacherSubjects = teacher.value.teacherSubjects.map(
+        ({ subjectId }: { subjectId: string }) => ({
+          id: subjectId,
+          label: subjectsResp.value.find(({ id }) => id === subjectId)?.label,
+        })
+      );
+      setFiltersLists((prev) => ({ ...prev, subjects: teacherSubjects }));
+    } else if (subjectsResp.success) {
+      setFiltersLists((prev) => ({ ...prev, subjects: subjectsResp.value }));
+    }
+
+    setLoading(false);
+  }, [user.id]);
+
+  const loadQuestionnaires = useCallback(async () => {
+    setLoading(true);
+    const questionnairesResp = await getQuestionnairesByTeacher(user.id);
+
+    console.log(questionnairesResp);
+    if (questionnairesResp.success) {
+      setQuestionnaireList(questionnairesResp.value);
+      setQuestionnaireFiltered(questionnairesResp.value);
+    }
+
+    setLoading(false);
+
+    if (!filtersLists?.year?.length) {
+      loadFilters();
+    }
+  }, [filtersLists?.year?.length, loadFilters, user.id]);
+
+  useEffect(() => {
+    if (user.id) loadQuestionnaires();
+  }, [loadQuestionnaires, user.id]);
 
   const handleFilter = ({
     fyear,
     fgrade,
     fclass,
+    fsubject,
     fsearchTerm,
   }: {
     fyear?: string;
     fgrade?: string;
     fclass?: string;
+    fsubject?: string;
     fsearchTerm?: string;
   }) => {
-    setQuizList(quizzes);
+    setQuestionnaireFiltered(questionnaireList);
 
     if (fsearchTerm ?? searchTerm) {
-      setQuizList((prev) =>
+      setQuestionnaireFiltered((prev) =>
         prev.filter((item) => item.title.includes(fsearchTerm ?? searchTerm))
       );
     }
     if (fyear ?? year) {
-      setQuizList((prev) =>
-        prev.filter((item) => item.year === (fyear ?? year))
+      setQuestionnaireFiltered((prev) =>
+        prev.filter((item) => item.year.id === (fyear ?? year))
       );
     }
     if (fgrade ?? grade) {
-      setQuizList((prev) =>
-        prev.filter((item) => item.grade === (fgrade ?? grade))
+      setQuestionnaireFiltered((prev) =>
+        prev.filter((item) => item.grade.id === (fgrade ?? grade))
+      );
+    }
+    if (fsubject ?? subject) {
+      setQuestionnaireFiltered((prev) =>
+        prev.filter((item) => item.subject.id === (fsubject ?? subject))
       );
     }
     if (fclass ?? class_) {
-      setQuizList((prev) =>
-        prev.filter((item) => item.class == (fclass ?? class_))
+      setQuestionnaireFiltered((prev) =>
+        prev.filter((item) =>
+          item.classes.map(({ id }) => id).includes(fclass ?? class_)
+        )
       );
     }
   };
@@ -153,18 +153,30 @@ const QuizList = () => {
 
   const handleSelect = (e: React.FormEvent<HTMLSelectElement>) => {
     const value = e.currentTarget.value;
-    const name = e.currentTarget.name as "year" | "grade" | "class";
+    const name = e.currentTarget.name as "year" | "grade" | "class" | "subject";
 
     const setParam =
-      name === "year" ? setYear : name === "grade" ? setGrade : setClass;
+      name === "year"
+        ? setYear
+        : name === "grade"
+        ? setGrade
+        : name === "subject"
+        ? setSubject
+        : setClass;
 
     setParam(value);
     const fname = `f${[name]}`;
-    handleFilter({ [fname]: value }), 0;
+
+    handleFilter({ [fname]: value });
   };
 
   const handleDeleteItem = async (id: string) => {
-    setQuizList((prev) => prev.filter((item) => item.id !== id));
+    const response = await deleteQuestionnaire(Number(id));
+    if (response.success) {
+      await loadQuestionnaires();
+    } else {
+      console.error("Error deleting questionnaire:", response.error);
+    }
   };
 
   const handleCleanFilter = () => {
@@ -172,7 +184,8 @@ const QuizList = () => {
     setYear("");
     setGrade("");
     setClass("");
-    setQuizList(quizzes);
+    setSubject("");
+    setQuestionnaireFiltered(questionnaireList);
   };
 
   const { isModalOpen, handleCloseModal, handleConfirm, handleOpenModal } =
@@ -184,7 +197,7 @@ const QuizList = () => {
         <div className="flex justify-between">
           <h2 className="text-white text-lg font-bold mb-4">QUESTIONÁRIOS</h2>
           <a
-            className="bg-orange-600 text-white px-4 py-2 rounded"
+            className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded"
             href="/new-questionnaire"
           >
             Novo
@@ -192,7 +205,7 @@ const QuizList = () => {
         </div>
         <input
           type="text"
-          placeholder="Pesquisar quizz"
+          placeholder="Pesquisar questionário"
           className="input"
           value={searchTerm}
           onChange={handleSearchBar}
@@ -203,10 +216,11 @@ const QuizList = () => {
             className="input"
             onChange={handleSelect}
             value={year}
+            disabled={isLoading}
           >
             <option value="">Selecione o ano</option>
-            {yearsList.map(({ value, label }) => (
-              <option key={value} value={value}>
+            {filtersLists.years.map(({ id, label }) => (
+              <option key={id} value={id}>
                 {label}
               </option>
             ))}
@@ -216,10 +230,11 @@ const QuizList = () => {
             className="input"
             onChange={handleSelect}
             value={grade}
+            disabled={isLoading}
           >
             <option value="">Selecione a série</option>
-            {gradesList.map(({ value, label }) => (
-              <option key={value} value={value}>
+            {filtersLists.grades.map(({ id, label }) => (
+              <option key={id} value={id}>
                 {label}
               </option>
             ))}
@@ -229,22 +244,37 @@ const QuizList = () => {
             className="input"
             onChange={handleSelect}
             value={class_}
+            disabled={isLoading}
           >
             <option value="">Selecione a turma</option>
-            {classesList.map(({ value, label }) => (
-              <option key={value} value={value}>
+            {filtersLists.classes.map(({ id, label }) => (
+              <option key={id} value={id}>
+                {label}
+              </option>
+            ))}
+          </select>
+          <select
+            name="subject"
+            className="input"
+            onChange={handleSelect}
+            value={subject}
+            disabled={isLoading}
+          >
+            <option value="">Selecione a matéria</option>
+            {filtersLists.subjects.map(({ id, label }) => (
+              <option key={id} value={id}>
                 {label}
               </option>
             ))}
           </select>
           <button
-            className="bg-red-800 text-white px-4 py-2 rounded"
+            className="bg-red-800 hover:bg-red-900 text-white px-4 py-2 rounded"
             onClick={() => handleFilter({})}
           >
             Filtrar
           </button>
           <button
-            className="bg-red-800 text-white px-4 py-2 rounded"
+            className="bg-red-800 hover:bg-red-900 text-white px-4 py-2 rounded"
             onClick={handleCleanFilter}
           >
             Limpar
@@ -252,18 +282,18 @@ const QuizList = () => {
         </div>
       </div>
 
-      {quizList.length === 0 ? (
+      {questionnaireFiltered.length === 0 ? (
         <div className="flex flex-col mx-auto py-6 px-12 w-full h-full text-white">
           <div
             className={`mx-auto ${
-              quizzes.length === 0 ? "my-auto" : "mt-auto"
+              questionnaireFiltered.length === 0 ? "my-auto" : "mt-auto"
             }`}
           >
             Nenhum questionário encontrado. Tente novamente.
           </div>
-          {quizzes.length > 0 && (
+          {questionnaireFiltered.length > 0 && (
             <button
-              className="mx-auto mb-auto bg-red-800 text-white px-4 py-2 rounded mt-4"
+              className="mx-auto mb-auto bg-red-800 hover:bg-red-950 text-white px-4 py-2 rounded mt-4 "
               onClick={handleCleanFilter}
             >
               Limpar o filtro
@@ -272,31 +302,31 @@ const QuizList = () => {
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4">
-          {quizList.map((quiz) => (
+          {questionnaireFiltered.map((questionnaire) => (
             <div
-              key={quiz.id}
+              key={questionnaire.id}
               className="bg-red-800 p-4 rounded flex justify-between items-center"
             >
-              <span className="text-white">{quiz.title}</span>
+              <span className="text-white">{questionnaire.title}</span>
               <div className="flex gap-2">
-                {quiz.status && (
-                  <span className="text-gray-300 text-sm">{quiz.status}</span>
-                )}
+                <span className="text-gray-300 text-sm mr-2">
+                  {questionnaire.questionsAmount} questões
+                </span>
                 <a
-                  className="text-white"
-                  href={`/new-questionnaire?id=${quiz.id}`}
+                  className="text-white hover:text-red-950"
+                  href={`/new-questionnaire?id=${questionnaire.id}`}
                 >
                   <EditIcon />
                 </a>
                 <a
-                  className="text-white"
-                  href={`/questionnaire-overview?id=${quiz.id}`}
+                  className="text-white hover:text-red-950"
+                  href={`/questionnaire-overview?id=${questionnaire.id}`}
                 >
                   <BarChartIcon />
                 </a>
                 <button
-                  className="text-white"
-                  onClick={handleOpenModal(quiz.id)}
+                  className="text-white hover:text-red-950"
+                  onClick={handleOpenModal(String(questionnaire.id))}
                 >
                   <TrashIcon />
                 </button>
@@ -309,11 +339,11 @@ const QuizList = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
-        title="Excluir quiz"
+        title="Excluir Questionnaire"
         actionName="Excluir"
       />
     </div>
   );
 };
 
-export default QuizList;
+export default QuestionnaireList;
