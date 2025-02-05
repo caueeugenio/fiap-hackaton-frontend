@@ -31,29 +31,20 @@ export function Sidebar() {
         <nav className="flex flex-col items-center gap-4 px-2 py-5">
           <TooltipProvider>
             <Link
-              href="/home"
+              href={user.role === "student" ? "/home" : "/teacher"}
               className="flex h-9 w-9 shrink-0 items-center justify-center bg-primary text-primary-foreground rounded-full"
             >
               <Home className="h-5 w-5" />
               <span className="sr-only">Home</span>
             </Link>
-
             <Tooltip>
               <TooltipTrigger asChild>
                 <Link
-                  href="#"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
-                >
-                  <Settings className="h-5 w-5  text-white" />
-                  <span className="sr-only">Configurações</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Configurações</TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href="/new-questionnaire"
+                  href={
+                    user.role === "student"
+                      ? "/my-quizzes"
+                      : "/new-questionnaire"
+                  }
                   className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground"
                 >
                   <Package className="h-5 w-5  text-white" />
