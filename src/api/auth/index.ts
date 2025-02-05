@@ -6,6 +6,7 @@ export async function login(email: string, password: string) {
       email,
       password,
     })
+    localStorage.setItem('user', JSON.stringify(response.data))
     return response.data
   } catch (error: any) {
     return error.response ? error.response.data : error.message

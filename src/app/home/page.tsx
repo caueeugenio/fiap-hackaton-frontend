@@ -17,6 +17,16 @@ const inter = Inter({
   subsets: ['latin'],
 })
 export default function Home() {
+  const [user, setUser] = useState<{
+    name: string
+    email: string
+    id: number
+    role: string
+  }>(() => {
+    const storedUser = localStorage.getItem('user')
+    return storedUser ? JSON.parse(storedUser) : null
+  })
+
   const router = useRouter()
   const [subjects, setSubjects] = useState([
     { name: 'Português', progress: 100 },
@@ -50,12 +60,22 @@ export default function Home() {
     <main className='sm:ml-14 h-screen'>
       <section className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2  h-full'>
         <div className='p-6 sm:p-6 shadow-md bg-header_background flex justify-center items-center'>
-          <Header
-            userName='João da Silva'
-            className='Turma XPTO'
-            grade='5ª Serie'
-            photo='https://github.com/shadcn.png'
-          />
+          {user && user.role === 'teacher' && (
+            <Header
+              userName={user?.name || ''}
+              photo='https://github.com/shadcn.png'
+              isTeacher={true}
+            />
+          )}
+          {user && user.role !== 'teacher' && (
+            <Header
+              userName={user?.name || ''}
+              className='Turma XPTO'
+              grade='5ª Serie'
+              photo='https://github.com/shadcn.png'
+              isTeacher={false}
+            />
+          )}
         </div>
         <div className='p-6 shadow-md bg-quaternary_background'>
           <h2
