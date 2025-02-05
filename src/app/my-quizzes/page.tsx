@@ -1,37 +1,48 @@
-'use client'
-import QuizCard from '@/components/QuizCard/page'
-import { useState } from 'react'
+"use client";
+
+import { getQuestionnairesByStudent } from "@/api/questionnaire";
+import QuizCard from "@/components/QuizCard/page";
+import { useUserContext } from "@/context/userContext";
+import { useCallback, useEffect, useState } from "react";
+import { StudentQuestionnaire } from "./types";
 
 export default function MyQuizzesPage() {
-  const [quizzes, setQuizzes] = useState([
-    { title: 'Biologia Celular - Organelas', average: '7.5' },
-    { title: 'Biologia Celular - Organelas', average: '7.5' },
-    { title: 'Biologia Celular - Organelas', average: '7.5' },
-    { title: 'Biologia Celular - Organelas', average: '7.5' },
-    { title: 'Biologia Celular - Organelas', average: '7.5' },
-    { title: 'Biologia Celular - Organelas', average: '7.5' },
-  ])
-  const subject = 'Biologia'
+  const [questionnaires, setQuestionnaires] = useState<StudentQuestionnaire[]>(
+    []
+  );
+
+  const { user } = useUserContext();
+
+  const loadQuestionnaires = useCallback(async () => {
+    const response = await getQuestionnairesByStudent(user.id);
+    if (response.success) {
+      setQuestionnaires(response.value as StudentQuestionnaire[]);
+    }
+  }, [user.id]);
+
+  useEffect(() => {
+    if (user.id) {
+      loadQuestionnaires();
+    }
+  }, [loadQuestionnaires, user.id]);
 
   return (
-    <div className='bg-tertiary_background flex items-center justify-center min-h-screen  '>
-      <div className='flex flex-col items-center'>
-        <h1 className='text-white text-4xl font-bold text-center pb-4'>
+    <div className="bg-tertiary_background flex items-center justify-center min-h-screen pl-14">
+      <div className="flex flex-col items-center max-w-screen-2xl px-16">
+        <h1 className="text-white text-4xl mb-auto font-bold pb-4">
           Meus Quizzes
         </h1>
-        <h2 className='text-left text-white pb-4 text-lg'>{subject}</h2>
-        <div className='grid lg:grid-cols-3 gap-7'>
-          {quizzes.map((quiz, index) => (
-            <QuizCard 
-            key={index} 
-            title={quiz.title} 
-            rate={quiz.average} 
-            customHeight='h-[100px]'	
-            description={`Média ${quiz.average}`}
+        <div className="flex gap-4 flex-wrap w-full">
+          {questionnaires.map((q) => (
+            <QuizCard
+              key={q.questionnaireId}
+              title={q.questionnaire.title}
+              rate={q.score}
+              description={`${q.questionnaire.questionsAmount} questões`}
             />
           ))}
         </div>
       </div>
     </div>
-  )
+  );
 }
