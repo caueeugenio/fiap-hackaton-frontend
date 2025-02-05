@@ -2,11 +2,18 @@ import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar'
 
 interface Avatar {
   userName: string
-  className: string
-  grade: string
+  className?: string
+  grade?: string
   photo?: string
+  isTeacher: boolean
 }
-export default function Header({ userName, className, grade, photo }: Avatar) {
+export default function Header({
+  userName,
+  className,
+  grade,
+  photo,
+  isTeacher,
+}: Avatar) {
   return (
     <header className='header'>
       <div className='flex items-center justify-center bg-header_background h-full'>
@@ -17,9 +24,14 @@ export default function Header({ userName, className, grade, photo }: Avatar) {
           </Avatar>
           <div className='text-white p-6'>
             <p className='text-3xl md:text-4xl lg:text-4xl '>{userName}</p>
-            <p className='text-lg md:text-1xl lg:text-2xl '>
-              {grade} - {className}
-            </p>
+            {isTeacher && (
+              <p className='text-lg md:text-1xl lg:text-2xl text-center font-'>Professor(a)</p>
+            )}
+            {!isTeacher && (
+              <p className='text-lg md:text-1xl lg:text-2xl '>
+                {grade} - {className}
+              </p>
+            )}
           </div>
         </div>
       </div>
