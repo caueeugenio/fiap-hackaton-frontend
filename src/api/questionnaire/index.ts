@@ -15,6 +15,18 @@ export const getQuestionnaires = async () => {
   }
 }
 
+export const getQuestionnaireById = async (id: number) => {
+  try {
+    const { data } = await api.get('/questionnaire/' + id);
+
+    return { success: true, value: data}    
+  } catch (error) {
+    const message = getErrorMessage((error as AxiosError).status);
+    
+    return { success: false, error: message}
+  }
+}
+
 export const getStudentScoresGroupedBySubject = async (userId: number) => {
   try {
     const { data } = await api.get(`/questionnaire/student/${userId}/scores`);
