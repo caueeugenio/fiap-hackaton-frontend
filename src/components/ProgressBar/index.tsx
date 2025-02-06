@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress"
 import { useEffect, useState } from "react"
 
 export function ProgressBar({ targetProgress }: { targetProgress: number }) {
-  const [progress, setProgress] = useState(13)
+  const [progress, setProgress] = useState(0)
 
   useEffect(() => {
     const timer = setTimeout(() => setProgress(targetProgress), 500)
