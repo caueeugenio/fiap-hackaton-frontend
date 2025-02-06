@@ -33,14 +33,20 @@ export default function MyQuizzesPage() {
           Meus Quizzes
         </h1>
         <div className="flex gap-4 flex-wrap w-full">
-          {questionnaires.map((q) => (
-            <QuizCard
-              key={q.questionnaireId}
-              title={q.questionnaire.title}
-              rate={q.score}
-              description={`${q.questionnaire.questionsAmount} questões`}
-            />
-          ))}
+          {questionnaires.length === 0 ? (
+            <div className="text-white m-auto">
+              Nenhum questionário realizado
+            </div>
+          ) : (
+            questionnaires.map((q) => (
+              <QuizCard
+                key={q.questionnaireId}
+                title={q.questionnaire.title}
+                rate={q.score}
+                description={`${q.questionnaire.questionsAmount} questões`}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
