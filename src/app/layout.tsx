@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
@@ -9,10 +9,7 @@ const geistSans = Geist({
   subsets: ["latin"],
 });
 import { Sidebar } from "@/components/Sidebar";
-// const geistMono = Geist_Mono({
-//   variable: "--font-geist-mono",
-//   subsets: ["latin"],
-// });
+import { UserProvider } from "@/context/userContext";
 
 export const metadata: Metadata = {
   title: "Hackaton - Frontend",
@@ -27,11 +24,16 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn("min-h-screen background font-sans antialiased", geistSans.className)}
+        className={cn(
+          "min-h-screen background font-sans antialiased",
+          geistSans.className
+        )}
       >
-       <Sidebar/>
-       {children}
-      <Toaster />
+        <UserProvider>
+          <Sidebar />
+          {children}
+          <Toaster />
+        </UserProvider>
       </body>
     </html>
   );
