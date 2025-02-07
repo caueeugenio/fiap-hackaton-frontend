@@ -1,40 +1,26 @@
 import { Pencil, CircleX } from 'lucide-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Button } from '../ui/button';
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group';
 import { Label } from '../ui/label';
 import { useToast } from '@/hooks/use-toast'; 
 
-
 interface Props {
     question_id: number,
     question: string,
-    answer: boolean,
-    page: string,
+    answer: boolean
     deletedQuestions: ((questions: any) => any);
 }
 
-export default function QuestionBox({question_id, question, answer, page, deletedQuestions}: Props) {
-    
-    useEffect(()=>{
-        const storageUser = localStorage.getItem("user")
-        if (storageUser) {
-          const parsedUser = JSON.parse(storageUser);
-      
-          if (parsedUser.role == "teacher") {
-            setTeacher(true)
-          }
-        }
-      },[])
-
+export default function QuestionBox({question_id, question, answer, deletedQuestions}: Props) {
     
     const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
-    const [teacher, setTeacher] = useState(false)
+    
     const [newQuestionContent, setNewQuestionContent] = useState<string>('');
     const [newQuestionAnswer, setNewQuestionAnswer] = useState<boolean | null>(null);
-    const [studentAnswer, setStudentAnswer] = useState<boolean>(false)
+    
     const { toast } = useToast();
     
     function handleQuestionUpdate(e: FormEvent) {
@@ -61,52 +47,29 @@ export default function QuestionBox({question_id, question, answer, page, delete
         });
     }
     
-    
     return (
         <div key={question_id} className="flex flex-col">
-            <div className="flex items-center">
-                <div className="bg-[#CD6700] mr-10 text-primary-foreground p-2 flex rounded-sm items-center">
-                    <div className="flex-1 w-full">{question_id}. {question}</div>
+            <div className="flex gap-4">
+                <div className="bg-[#CD6700] text-primary-foreground p-2 flex w-full rounded-sm justify-between items-center">
+                    <div className="flex-1">{question_id}. {question}</div>
                     <div className="flex p-2 gap-2">
-                    {page !== '/questionnaire' && <div className="flex p-2 gap-2">
-                    {/* <Pencil className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenEditDialog(true)} /> */}
-                    <CircleX className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenDeleteDialog(true)} />
-                                </div>}
+                        {/* <Pencil className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenEditDialog(true)} /> */}
+                        <CircleX className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenDeleteDialog(true)} />
                     </div>
                 </div>
-                <div className="gap-2 flex max-h-14">
+                <div className="gap-2 flex align-center justify-center">
                     {
-                      !teacher ? (
-                        <>
-                            <span onClick={()=>{
-                                setStudentAnswer(true)}
-                                } 
-                                className={`${studentAnswer ? (
-                                "bg-[#CD6700] p-4 text-primary-foreground rounded-sm cursor-pointer"
-                            ) : (
-                                "bg-white p-4 rounded-sm cursor-pointer")
-                                }`}>V</span>
-                            <span onClick={()=>{
-                                setStudentAnswer(false)}
-                                } 
-                                className={`${studentAnswer ? (
-                                    "bg-white p-4 rounded-sm cursor-pointer"
-                                 ) : (
-                                    "bg-[#CD6700] p-4 text-primary-foreground rounded-sm cursor-pointer")
-                                    }`}>F</span>
-                        </>
-                      ):(answer ? (
-                        <>
-                            <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">V</span>
-                            <span className="bg-white p-4 rounded-sm">F</span>
-                        </>
+                        answer ? (
+                            <>
+                                <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">V</span>
+                                <span className="bg-white p-4 rounded-sm">F</span>
+                            </>
                         ):(
-                        <>
-                            <span className="bg-white p-4 rounded-sm">V</span>
-                            <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">F</span>
-                        </>
-                     ) 
-                    )
+                            <>
+                                <span className="bg-white p-4 rounded-sm">V</span>
+                                <span className="bg-[#CD6700] p-4 text-primary-foreground rounded-sm">F</span>
+                            </>
+                        ) 
                     }
                 </div>
                 
