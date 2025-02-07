@@ -46,10 +46,16 @@ POSTGRES_DB=hackathon
 JWT_SECRET=mysecret
 ```
 
-Por fim, subir a aplicação utilizando docker:
+Por fim, subir o banco de dados utilizando docker:
 
 ```sh
-docker compose up
+docker compose up db
+```
+
+E rodar a aplicação:
+
+```sh
+npm start
 ```
 
 Após esse procedimento, você terá rodando em localhost:
@@ -83,7 +89,7 @@ Existem dois tipos de usuários: alunos e professores. De acordo com o tipo de u
 
 ```
 aluno
-email: bob.brown@example.com
+email: ana.costa@example.com
 senha: password123
 
 professor:
