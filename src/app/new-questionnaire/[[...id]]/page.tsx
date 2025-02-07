@@ -1,6 +1,5 @@
 'use client'
 
-<<<<<<< HEAD:src/app/new-questionnaire/[[...id]]/page.tsx
 
 import HeaderDetails from "@/components/HeaderDetails"
 import InputText from "@/components/InputText"
@@ -13,24 +12,19 @@ import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useParams } from "next/navigation";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useUserContext } from '@/context/userContext'
+import { getSubjects, getGrades, getClasses, getYears } from "@/api/category";
+import { Subjects, Grades, Classes, Years } from "../types";
+import { postQuestionnaire } from "@/api/questionnaire";
 
 
-const topicsAvailableMock = [
-    {"id": 1, "topic": "Biologia"},
-    {"id": 2, "topic": "Matemática"},
-    {"id": 3, "topic": "Geografia"}
-]
-
-const studentClassesMock = [
-    {"id": 1, "studentYear": 5, "studentClass": "A"},
-    {"id": 2, "studentYear": 5, "studentClass": "B"},
-    {"id": 3, "studentYear": 5, "studentClass": "C"}
-]
 
 export default function NewQuestionnaire() { 
     const [loading, setLoading] = useState(false)
     const { id } = useParams() as { id: string };
+    const [quizName, setQuizName] = useState<string>('')
+    const user = useUserContext()
         
     const fetchQuizz = async (id: string) => {
         try{
@@ -49,34 +43,6 @@ export default function NewQuestionnaire() {
         }
       },[id])
     
-=======
-import HeaderDetails from '@/components/HeaderDetails'
-import InputText from '@/components/InputText'
-import Loader from '@/components/Loader'
-import QuestionBox from '@/components/QuestionBox'
-import TextArea from '@/components/TextArea'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { useToast } from '@/hooks/use-toast'
-import axios from 'axios'
-
-import { useCallback, useEffect, useState } from 'react'
-import { Classes, Grades, Subjects, Years } from './types'
-import { getClasses, getGrades, getSubjects, getYears } from '@/api/category'
-import { postQuestionnaire } from '@/api/questionnaire'
-import { useUserContext } from '@/context/userContext'
-
-export default function NewQuestionnaire() {
-  const [loading, setLoading] = useState(false)
-  const [quizName, setQuizName] = useState<string>('')
-  const user = useUserContext()
->>>>>>> b1af85969f17b857f17a67e9aa8dcb5334401166:src/app/new-questionnaire/page.tsx
   const fetchQuestions = async (text: string) => {
     setLoading(true)
     try {
@@ -186,112 +152,6 @@ export default function NewQuestionnaire() {
       return
     }
 
-<<<<<<< HEAD:src/app/new-questionnaire/[[...id]]/page.tsx
-    
-    return (
-        <main className="bg-tertiary_background flex flex-col items-center min-h-screen">
-            <HeaderDetails title="Editar / Novo Questionário" />
-            <form className="flex flex-col w-[800] my-5 gap-4">
-                <InputText 
-                    isDisabled={loading}
-                    fieldName={"quiz_name"} 
-                    content={"Nome do Questionário"} 
-                    placeholder={""} 
-                    value={quizName}
-                    onChange={(e) => setQuizName(e.target.value)}
-                />
-                <TextArea 
-                    isDisabled={loading}
-                    fieldName={"content_class"} 
-                    content={"Cole abaixo o conteúdo da aula que será a base para as questões:"} 
-                    placeholder={""} 
-                    value={content}
-                    onChange={(e) => setContent(e.target.value)}
-                />
-                <div className="flex justify-end gap-4 items-center">
-                    <p className="text-white">Número de Questões:</p>
-                    <Select disabled={loading} onValueChange={(val) => setQuestionsCount(parseInt(val))}>
-                        <SelectTrigger className="bg-white border-none w-[120] align-center">
-                            <SelectValue placeholder="Selecione" />
-                        </SelectTrigger>
-                        <SelectContent >
-                            <SelectItem value="10">10</SelectItem>
-                            <SelectItem value="15">15</SelectItem>
-                            <SelectItem value="20">20</SelectItem>
-                            <SelectItem value="25">25</SelectItem>
-                            <SelectItem value="30">30</SelectItem>
-                            <SelectItem value="35">35</SelectItem>
-                            <SelectItem value="40">40</SelectItem>
-                            <SelectItem value="45">45</SelectItem>
-                            <SelectItem value="50">50</SelectItem>
-                        </SelectContent>
-                    </Select>
-                    <Button disabled={loading} className='w-[200] bg-button_primary' type='submit' onClick={handleGenerateQuestions}>Gerar Questões</Button>
-                </div>
-                {
-                    loading ? (
-                        <div className="flex justify-center items-center h-[50vh]">
-                            <Loader />
-                            <span className="pl-2 text-white">Gerando questões, por favor, aguarde.</span>
-                        </div>
-                    ) : (
-                        showQuestions ? (
-                            <>
-                                <div className="flex flex-col py-4 gap-4">
-                                    {
-                                        questions.map((question) => {
-                                            return <QuestionBox page="new-questionnaire" key={question.id} question_id={question.id} question={question.question} answer={question.answer} />
-                                        })
-                                    }
-                                </div>
-                                <div className="flex gap-4">
-                                    <Select onValueChange={(val) => setSelectedTopic(val)}>
-                                        <SelectTrigger className="bg-white border-none w-[200] align-center">
-                                            <SelectValue placeholder="Selecione a Disciplina" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {
-                                                topics.map((topic) => {
-                                                    return (
-                                                        <SelectItem value={topic.topic} key={topic.id}>{topic.topic}</SelectItem>
-                                                    )
-                                                })
-                                            }
-                                        </SelectContent>
-                                    </Select>
-                                    <Select onValueChange={(val) => setSelectedStudentClass(val)}>
-                                        <SelectTrigger className="bg-white border-none w-[200] align-center">
-                                            <SelectValue placeholder="Selecione a Turma" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {
-                                                studentClasses.map((studentClass) => {
-                                                    return (
-                                                        <SelectItem 
-                                                            value={studentClass.studentYear + "a Série " + studentClass.studentClass}
-                                                            key={studentClass.id}>
-                                                                {studentClass.studentYear}a Série {studentClass.studentClass}
-                                                        </SelectItem>
-                                                    )
-                                                })
-                                            }
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-                                <Button className='bg-button_primary' type='submit' onClick={handleQuestionnaireSubmit}>Salvar Edição / Criar Questionário</Button>
-                            </>
-                        ) : null
-                    )
-                }
-                
-            </form>
-            
-            
-            
-        </main>
-        
-        
-=======
     postQuestionnaire({
       title: quizName,
       yearId: selectedStudentYears,
@@ -318,7 +178,6 @@ export default function NewQuestionnaire() {
           variant: 'destructive',
         })
       })
->>>>>>> b1af85969f17b857f17a67e9aa8dcb5334401166:src/app/new-questionnaire/page.tsx
 
     setSelectedTopic('')
     setSelectedStudentGrades('')
@@ -393,6 +252,7 @@ export default function NewQuestionnaire() {
               {questions.map((question) => {
                 return (
                   <QuestionBox
+                    page="new-questionnaire"
                     key={question.id}
                     question_id={question.id}
                     question={question.question}
