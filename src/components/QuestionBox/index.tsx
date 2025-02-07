@@ -10,10 +10,11 @@ import { useToast } from '@/hooks/use-toast';
 interface Props {
     question_id: number,
     question: string,
-    answer: boolean
+    answer: boolean,
+    page: string
 }
 
-export default function QuestionBox({question_id, question, answer}: Props) {
+export default function QuestionBox({question_id, question, answer, page}: Props) {
     
     useEffect(()=>{
         const storageUser = localStorage.getItem("user")
@@ -59,11 +60,11 @@ export default function QuestionBox({question_id, question, answer}: Props) {
     
     return (
         <div key={question_id} className="flex flex-col">
-            <div className="flex gap-4">
-                <div className="bg-[#CD6700] text-primary-foreground p-2 flex w-full rounded-sm justify-between items-center">
-                    <div className="flex-1">{question_id}. {question}</div>
+            <div className="flex items-center">
+                <div className="bg-[#CD6700] mr-10 text-primary-foreground p-2 flex rounded-sm items-center">
+                    <div className="flex-1 w-full">{question_id}. {question}</div>
                     <div className="flex p-2 gap-2">
-                    {teacher && <div className="flex p-2 gap-2">
+                    {page !== '/questionnaire' && <div className="flex p-2 gap-2">
                     <Pencil className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenEditDialog(true)} />
                     <CircleX className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenDeleteDialog(true)} />
                                 </div>}

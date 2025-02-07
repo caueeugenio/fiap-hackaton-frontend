@@ -190,7 +190,7 @@ export default function NewQuestionnaire() {
                                 <div className="flex flex-col py-4 gap-4">
                                     {
                                         questions.map((question) => {
-                                            return <QuestionBox key={question.id} question_id={question.id} question={question.question} answer={question.answer} />
+                                            return <QuestionBox page="new-questionnaire" key={question.id} question_id={question.id} question={question.question} answer={question.answer} />
                                         })
                                     }
                                 </div>

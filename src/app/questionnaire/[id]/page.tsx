@@ -3,9 +3,11 @@ import QuestionBox from '@/components/QuestionBox'
 import { Button } from '@/components/ui/button'
 import { Roboto } from 'next/font/google'
 import { Inter } from 'next/font/google'
-import { useEffect, useState } from 'react'
-import { useRouter, useParams} from 'next/navigation'
+import { FormEvent, useEffect, useState } from 'react'
+import { useRouter, useParams, usePathname} from 'next/navigation'
 import axios from 'axios'
+import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
+import { title } from 'process'
 
 
 
@@ -20,7 +22,9 @@ const inter = Inter({
 
 export default function Questionnaire() {
   const { id } = useParams() as { id: string };
-  
+  const pathName = usePathname()
+  const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
+  const cleanPath = pathName.split('/').slice(0, -1).join('/') || '/';
   const fetchQuizz = async (id: string) => {
     try{
     const response = await axios.get(`http://localhost:3001/questionnaire/${id}`)
@@ -35,13 +39,22 @@ export default function Questionnaire() {
   }
   
   useEffect(()=>{
+    const storageUser = localStorage.getItem("user")
     if(id){
     fetchQuizz(id)
     }
+    if (storageUser) {
+      const parsedUser = JSON.parse(storageUser);
+      
+    if (parsedUser.role == "teacher") {
+            setTeacher(true)
+      }
+        }
   },[id])
 
 const router = useRouter()
 const [quizz, setQuizz] = useState([])
+const [teacher, setTeacher] = useState(false)
 const [title, setTitle] = useState('')
 const [text, setText] = useState('')
 
@@ -58,6 +71,12 @@ const [text, setText] = useState('')
         </div>
       );
     }
+
+    function handleDeleteQuizz(e: FormEvent) {
+            e.preventDefault();
+            axios.delete(`http://localhost:3001/questionnaire/${id}`)
+            router.push('/teacher')
+        }
     
     return (
         <div className='flex flex-row justify-center h-screen'>
@@ -74,10 +93,12 @@ const [text, setText] = useState('')
 
                   {quizz.map((question, index) => (
                     <span className='mb-5' key={index}>
-                   <QuestionBox  question_id={index + 1} question={question.question} answer={question.answer} />
+                   <QuestionBox  question_id={index + 1} question={question.question} answer={question.answer} page={cleanPath} />
                     </span>))}
                 </div>
                 <span className='w-full flex flex-col items-center'>
+                  {teacher ? (
+                    <>
                 <Button
                 className={`${roboto.className} text-[18px] col-span-2 p-6 w-full bg-button_primary  w-4/5 hover:bg-orange-500`}
                 onClick={() => router.push(`/new-questionnaire/${id}`) }
@@ -86,12 +107,38 @@ const [text, setText] = useState('')
                 </Button>
                 <Button
                 className={`${roboto.className} text-[18px] col-span-2 p-6 w-full  bg-red-800 mt-4 mb-10 w-4/5 hover:bg-red-900`}
-                type='submit'
+                onClick={() => setOpenDeleteDialog(true)}
                         >
                           Excluir
                 </Button>
+                  </>
+                ):(
+                <Button
+                className={`${roboto.className} text-[18px] col-span-2 p-6 w-full bg-button_primary mb-10  w-4/5 hover:bg-orange-500`}
+                        >
+                          Enviar
+                </Button>)}
                 </span>
             </div>
+            
+            <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+                <DialogContent className="bg-white">
+                    
+                    <DialogHeader>
+                        <DialogTitle>Excluir Quizz</DialogTitle>
+                        <DialogDescription>Tem certeza que deseja excluir esse Quizz?</DialogDescription>
+                    </DialogHeader>
+                    
+                    <p><strong>Nome do quizz: </strong>{title}</p>
+                    
+                   <DialogFooter>
+                        <DialogClose asChild>
+                            <Button type="submit" variant="secondary">Fechar</Button>
+                        </DialogClose>
+                        <Button type="submit" className='bg-red-500' onClick={handleDeleteQuizz}>Excluir</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>      
             
              </div>
     )
