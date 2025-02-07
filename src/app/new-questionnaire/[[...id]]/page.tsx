@@ -1,31 +1,48 @@
 'use client'
 
-import HeaderDetails from '@/components/HeaderDetails'
-import InputText from '@/components/InputText'
-import Loader from '@/components/Loader'
-import QuestionBox from '@/components/QuestionBox'
-import TextArea from '@/components/TextArea'
-import { Button } from '@/components/ui/button'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
-import { useToast } from '@/hooks/use-toast'
-import axios from 'axios'
 
-import { useCallback, useEffect, useState } from 'react'
-import { Classes, Grades, Subjects, Years } from './types'
-import { getClasses, getGrades, getSubjects, getYears } from '@/api/category'
-import { postQuestionnaire } from '@/api/questionnaire'
+import HeaderDetails from "@/components/HeaderDetails"
+import InputText from "@/components/InputText"
+import Loader from "@/components/Loader";
+import QuestionBox from "@/components/QuestionBox";
+import TextArea from "@/components/TextArea";
+import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import axios from "axios";
+import { useParams } from "next/navigation";
+
+import { useCallback, useEffect, useState } from "react";
 import { useUserContext } from '@/context/userContext'
+import { getSubjects, getGrades, getClasses, getYears } from "@/api/category";
+import { Subjects, Grades, Classes, Years } from "../types";
+import { postQuestionnaire } from "@/api/questionnaire";
 
-export default function NewQuestionnaire() {
-  const [loading, setLoading] = useState(false)
-  const [quizName, setQuizName] = useState<string>('')
-  const user = useUserContext()
+
+
+export default function NewQuestionnaire() { 
+    const [loading, setLoading] = useState(false)
+    const { id } = useParams() as { id: string };
+    const [quizName, setQuizName] = useState<string>('')
+    const user = useUserContext()
+        
+    const fetchQuizz = async (id: string) => {
+        try{
+        const response = await axios.get(`http://localhost:3001/questionnaire/${id}`)
+        const questionnaire = response.data
+        setQuestions(questionnaire.questions)
+        setShowQuestions(true)
+        } catch (error) {
+          console.error('Error posting data to Ollama API:', error)
+        }
+      }
+      
+      useEffect(()=>{
+        if(id){
+        fetchQuizz(id)
+        }
+      },[id])
+    
   const fetchQuestions = async (text: string) => {
     setLoading(true)
     try {
@@ -235,6 +252,7 @@ export default function NewQuestionnaire() {
               {questions.map((question) => {
                 return (
                   <QuestionBox
+                    page="new-questionnaire"
                     key={question.id}
                     question_id={question.id}
                     question={question.question}
