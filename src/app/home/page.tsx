@@ -227,7 +227,7 @@ export default function Home() {
                   />
                   <a
                     className="bg-primary_background hover:bg-orange-700 text-white p-3 rounded ml-4 text-center"
-                    href={`/questionnaire/id=${task.questionnaireId}`}
+                    href={`/questionnaire/${task.questionnaireId}`}
                   >
                     Iniciar Questionário
                   </a>
