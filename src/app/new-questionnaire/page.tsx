@@ -75,6 +75,13 @@ export default function NewQuestionnaire() {
   const [studentYears, setStudentYears] = useState<Years[]>([])
   const [selectedStudentYears, setSelectedStudentYears] = useState<string>('')
 
+  const deletedQuestions = (data: any) => {
+    setQuestions(data);
+    if(questions.length === 1){
+      setShowQuestions(false);
+    }
+  };
+
   const fetchData = useCallback(
     async (
       fetchFunction: () => Promise<any>,
@@ -232,6 +239,7 @@ export default function NewQuestionnaire() {
                     question_id={question.id}
                     question={question.question}
                     answer={question.answer}
+                    deletedQuestions={deletedQuestions}
                   />
                 )
               })}
