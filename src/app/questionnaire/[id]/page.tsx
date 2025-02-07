@@ -19,12 +19,13 @@ const inter = Inter({
 })
 
 export default function Questionnaire() {
-  const { id } = useParams() as { id: string };;
+  const { id } = useParams() as { id: string };
   
   const fetchQuizz = async (id: string) => {
     try{
     const response = await axios.get(`http://localhost:3001/questionnaire/${id}`)
     const questionnaire = response.data
+    setTitle(questionnaire.title)
     setText(questionnaire.content)
     setQuizz(questionnaire.questions)
     console.log(response.data)
@@ -41,6 +42,7 @@ export default function Questionnaire() {
 
 const router = useRouter()
 const [quizz, setQuizz] = useState([])
+const [title, setTitle] = useState('')
 const [text, setText] = useState('')
 
    
@@ -60,7 +62,7 @@ const [text, setText] = useState('')
     return (
         <div className='flex flex-row justify-center h-screen'>
             <div className="w-3/5 flex flex-col items-center  pt-10">
-                <h1 className={`${inter.className} text-gray-100 text-[30px] mb-10`}>Biologia Celular - Organelas</h1>
+                <h1 className={`${inter.className} text-gray-100 text-[30px] mb-10`}>{title}</h1>
                 <QuizText/>
             </div>
         
@@ -78,7 +80,7 @@ const [text, setText] = useState('')
                 <span className='w-full flex flex-col items-center'>
                 <Button
                 className={`${roboto.className} text-[18px] col-span-2 p-6 w-full bg-button_primary  w-4/5 hover:bg-orange-500`}
-                onClick={() => router.push('/new-questionnaire') }
+                onClick={() => router.push(`/new-questionnaire/${id}`) }
                         >
                           Editar
                 </Button>

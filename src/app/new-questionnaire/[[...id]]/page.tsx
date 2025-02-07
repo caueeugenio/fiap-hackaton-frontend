@@ -1,5 +1,6 @@
 'use client'
 
+
 import HeaderDetails from "@/components/HeaderDetails"
 import InputText from "@/components/InputText"
 import QuestionBox from "@/components/QuestionBox";
@@ -8,8 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import axios from "axios";
+import { useParams } from "next/navigation";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 
 const topicsAvailableMock = [
@@ -25,6 +27,25 @@ const studentClassesMock = [
 ]
 
 export default function NewQuestionnaire() {
+    const { id } = useParams() as { id: string };
+        
+    const fetchQuizz = async (id: string) => {
+        try{
+        const response = await axios.get(`http://localhost:3001/questionnaire/${id}`)
+        const questionnaire = response.data
+        setQuestions(questionnaire.questions)
+        setShowQuestions(true)
+        } catch (error) {
+          console.error('Error posting data to Ollama API:', error)
+        }
+      }
+      
+      useEffect(()=>{
+        if(id){
+        fetchQuizz(id)
+        }
+      },[id])
+    
   const fetchQuestions = async (text: string) => {
     try {
       const response = await axios.post('http://localhost:3001/ia', {
