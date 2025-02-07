@@ -339,7 +339,7 @@ const QuestionnaireList = () => {
         isOpen={isModalOpen}
         onClose={handleCloseModal}
         onConfirm={handleConfirm}
-        title="Excluir Questionnaire"
+        title="Excluir Questionário"
         actionName="Excluir"
       />
     </div>
