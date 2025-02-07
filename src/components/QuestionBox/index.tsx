@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 interface Props {
     question_id: number,
     question: string,
+<<<<<<< HEAD
     answer: boolean,
     page: string
 }
@@ -28,6 +29,13 @@ export default function QuestionBox({question_id, question, answer, page}: Props
       },[])
     
 
+=======
+    answer: boolean
+    deletedQuestions: ((questions: any) => any);
+}
+
+export default function QuestionBox({question_id, question, answer, deletedQuestions}: Props) {
+>>>>>>> b1af85969f17b857f17a67e9aa8dcb5334401166
     
     const [openEditDialog, setOpenEditDialog] = useState<boolean>(false);
     const [openDeleteDialog, setOpenDeleteDialog] = useState<boolean>(false);
@@ -54,7 +62,11 @@ export default function QuestionBox({question_id, question, answer, page}: Props
     
     function handleDeleteQuestion(e: FormEvent) {
         e.preventDefault();
-        console.log({"action": "delete", question_id, question, answer})
+        deletedQuestions((questions:any) => {
+            const temp = questions;
+            const questionExcluded = questions.find((q: any) => q.question_id !== question_id);
+            return temp.filter((q: any) => q !== questionExcluded);
+        });
     }
     
     
@@ -64,10 +76,15 @@ export default function QuestionBox({question_id, question, answer, page}: Props
                 <div className="bg-[#CD6700] mr-10 text-primary-foreground p-2 flex rounded-sm items-center">
                     <div className="flex-1 w-full">{question_id}. {question}</div>
                     <div className="flex p-2 gap-2">
+<<<<<<< HEAD
                     {page !== '/questionnaire' && <div className="flex p-2 gap-2">
                     <Pencil className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenEditDialog(true)} />
                     <CircleX className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenDeleteDialog(true)} />
                                 </div>}
+=======
+                        {/* <Pencil className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenEditDialog(true)} /> */}
+                        <CircleX className="h-5 w-5  text-white text-sm cursor-pointer" onClick={() => setOpenDeleteDialog(true)} />
+>>>>>>> b1af85969f17b857f17a67e9aa8dcb5334401166
                     </div>
                 </div>
                 <div className="gap-2 flex max-h-14">
