@@ -3,6 +3,7 @@
 
 import HeaderDetails from "@/components/HeaderDetails"
 import InputText from "@/components/InputText"
+import Loader from "@/components/Loader";
 import QuestionBox from "@/components/QuestionBox";
 import TextArea from "@/components/TextArea";
 import { Button } from "@/components/ui/button";
@@ -26,7 +27,8 @@ const studentClassesMock = [
     {"id": 3, "studentYear": 5, "studentClass": "C"}
 ]
 
-export default function NewQuestionnaire() {
+export default function NewQuestionnaire() { 
+    const [loading, setLoading] = useState(false)
     const { id } = useParams() as { id: string };
         
     const fetchQuizz = async (id: string) => {
@@ -47,6 +49,7 @@ export default function NewQuestionnaire() {
       },[id])
     
   const fetchQuestions = async (text: string) => {
+    setLoading(true);
     try {
       const response = await axios.post('http://localhost:3001/ia', {
         text,
@@ -74,7 +77,9 @@ export default function NewQuestionnaire() {
       console.log(response.data)
     } catch (error) {
       console.error('Error posting data to Ollama API:', error)
-    }
+    } finally {
+        setLoading(false);
+      }
   }
     const [quizName, setQuizName] = useState<string>('');
     const [content, setContent] = useState<string>('');
@@ -138,6 +143,7 @@ export default function NewQuestionnaire() {
             <HeaderDetails title="Editar / Novo Questionário" />
             <form className="flex flex-col w-[800] my-5 gap-4">
                 <InputText 
+                    isDisabled={loading}
                     fieldName={"quiz_name"} 
                     content={"Nome do Questionário"} 
                     placeholder={""} 
@@ -145,6 +151,7 @@ export default function NewQuestionnaire() {
                     onChange={(e) => setQuizName(e.target.value)}
                 />
                 <TextArea 
+                    isDisabled={loading}
                     fieldName={"content_class"} 
                     content={"Cole abaixo o conteúdo da aula que será a base para as questões:"} 
                     placeholder={""} 
@@ -153,7 +160,7 @@ export default function NewQuestionnaire() {
                 />
                 <div className="flex justify-end gap-4 items-center">
                     <p className="text-white">Número de Questões:</p>
-                    <Select onValueChange={(val) => setQuestionsCount(parseInt(val))}>
+                    <Select disabled={loading} onValueChange={(val) => setQuestionsCount(parseInt(val))}>
                         <SelectTrigger className="bg-white border-none w-[120] align-center">
                             <SelectValue placeholder="Selecione" />
                         </SelectTrigger>
@@ -169,55 +176,62 @@ export default function NewQuestionnaire() {
                             <SelectItem value="50">50</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Button className='w-[200] bg-button_primary' type='submit' onClick={handleGenerateQuestions}>Gerar Questões</Button>
+                    <Button disabled={loading} className='w-[200] bg-button_primary' type='submit' onClick={handleGenerateQuestions}>Gerar Questões</Button>
                 </div>
                 {
-                    showQuestions ? (
-                        <>
-                            <div className="flex flex-col py-4 gap-4">
-                                {
-                                    questions.map((question) => {
-                                        return <QuestionBox key={question.id} question_id={question.id} question={question.question} answer={question.answer} />
-                                    })
-                                }
-                            </div>
-                            <div className="flex gap-4">
-                                <Select onValueChange={(val) => setSelectedTopic(val)}>
-                                    <SelectTrigger className="bg-white border-none w-[200] align-center">
-                                        <SelectValue placeholder="Selecione a Disciplina" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {
-                                            topics.map((topic) => {
-                                                return (
-                                                    <SelectItem value={topic.topic} key={topic.id}>{topic.topic}</SelectItem>
-                                                )
-                                            })
-                                        }
-                                    </SelectContent>
-                                </Select>
-                                <Select onValueChange={(val) => setSelectedStudentClass(val)}>
-                                    <SelectTrigger className="bg-white border-none w-[200] align-center">
-                                        <SelectValue placeholder="Selecione a Turma" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        {
-                                            studentClasses.map((studentClass) => {
-                                                return (
-                                                    <SelectItem 
-                                                        value={studentClass.studentYear + "a Série " + studentClass.studentClass}
-                                                        key={studentClass.id}>
-                                                            {studentClass.studentYear}a Série {studentClass.studentClass}
-                                                    </SelectItem>
-                                                )
-                                            })
-                                        }
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                            <Button className='bg-button_primary' type='submit' onClick={handleQuestionnaireSubmit}>Salvar Edição / Criar Questionário</Button>
-                        </>
-                    ) : null
+                    loading ? (
+                        <div className="flex justify-center items-center h-[50vh]">
+                            <Loader />
+                            <span className="pl-2 text-white">Gerando questões, por favor, aguarde.</span>
+                        </div>
+                    ) : (
+                        showQuestions ? (
+                            <>
+                                <div className="flex flex-col py-4 gap-4">
+                                    {
+                                        questions.map((question) => {
+                                            return <QuestionBox key={question.id} question_id={question.id} question={question.question} answer={question.answer} />
+                                        })
+                                    }
+                                </div>
+                                <div className="flex gap-4">
+                                    <Select onValueChange={(val) => setSelectedTopic(val)}>
+                                        <SelectTrigger className="bg-white border-none w-[200] align-center">
+                                            <SelectValue placeholder="Selecione a Disciplina" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {
+                                                topics.map((topic) => {
+                                                    return (
+                                                        <SelectItem value={topic.topic} key={topic.id}>{topic.topic}</SelectItem>
+                                                    )
+                                                })
+                                            }
+                                        </SelectContent>
+                                    </Select>
+                                    <Select onValueChange={(val) => setSelectedStudentClass(val)}>
+                                        <SelectTrigger className="bg-white border-none w-[200] align-center">
+                                            <SelectValue placeholder="Selecione a Turma" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {
+                                                studentClasses.map((studentClass) => {
+                                                    return (
+                                                        <SelectItem 
+                                                            value={studentClass.studentYear + "a Série " + studentClass.studentClass}
+                                                            key={studentClass.id}>
+                                                                {studentClass.studentYear}a Série {studentClass.studentClass}
+                                                        </SelectItem>
+                                                    )
+                                                })
+                                            }
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                                <Button className='bg-button_primary' type='submit' onClick={handleQuestionnaireSubmit}>Salvar Edição / Criar Questionário</Button>
+                            </>
+                        ) : null
+                    )
                 }
                 
             </form>

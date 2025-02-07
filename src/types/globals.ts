@@ -1,14 +1,10 @@
-export type Year = {
-  id: string;
-  label: string;
-};
+export type Result<T> = 
+  | { success: true; value: T }
+  | { success: false; error: string };
 
-export type Grade = {
-  id: string;
-  label: string;
-};
+export type Role = 'student' | 'teacher' | 'admin';
 
-export type Subject = {
+export type Category = {
   id: string;
   label: string;
 };
@@ -20,26 +16,24 @@ export type User = {
   email: string;
 };
 
-export type Class = {
-  id: string;
-  label: string;
-};
-
 export type Question = {
   id: number;
   question: string;
   answer: boolean;
 };
 
-export type Questionnaire = {
-  id: number;
+export type QuestionnaireBase = {
+  id: number; 
   title: string;
-  content: string;
+  year: Category;
+  grade: Category;
+  classes: Category[];
   questionsAmount: number;
-  year: Year;
-  grade: Grade;
-  subject: Subject;
+  subject: Category;
+};
+
+export interface Questionnaire extends QuestionnaireBase {
+  content: string;
   author: User;
-  classes: Class[];
   questions: Question[];
 };
