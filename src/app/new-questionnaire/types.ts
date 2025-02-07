@@ -9,24 +9,30 @@ export interface Grades {
 }
 
 export interface Questionnaire {
-    id?: string
-    title: string
-    yearId: string,
-    gradeId: string,
-    subjectId: string,
-    authorId: number,
-    content: string,
-    questionsAmount: number,
-    classes: string[],
-    questions: Question[]
+  id?: string
+  title: string
+  yearId: string
+  gradeId: string
+  subjectId: string
+  authorId: number
+  content: string
+  questionsAmount: number
+  classes: string[]
+  questions: Question[]
 }
 
 export interface Question {
-    id: string
-    question: string
-    answer: boolean
+  id: string
+  question: string
+  answer: boolean
 }
 
-export interface Classes { 
-    id: string
+export interface Classes {
+  id: string
+  label: string
+}
+
+export interface Years {
+  id: string
+  label: string
 }

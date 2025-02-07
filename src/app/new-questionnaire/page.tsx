@@ -17,14 +17,15 @@ import { useToast } from '@/hooks/use-toast'
 import axios from 'axios'
 
 import { useCallback, useEffect, useState } from 'react'
-import { Grades, Subjects } from './types'
-import { getGrades, getSubjects } from '@/api/category'
+import { Classes, Grades, Subjects, Years } from './types'
+import { getClasses, getGrades, getSubjects, getYears } from '@/api/category'
 import { postQuestionnaire } from '@/api/questionnaire'
+import { useUserContext } from '@/context/userContext'
 
 export default function NewQuestionnaire() {
   const [loading, setLoading] = useState(false)
   const [quizName, setQuizName] = useState<string>('')
-
+  const user = useUserContext()
   const fetchQuestions = async (text: string) => {
     setLoading(true)
     try {
@@ -51,7 +52,6 @@ export default function NewQuestionnaire() {
         })
       setQuestions(formattedQuestions)
       setShowQuestions(true)
-      console.log(response.data)
     } catch (error) {
       console.error('Error posting data to Ollama API:', error)
     } finally {
@@ -64,30 +64,36 @@ export default function NewQuestionnaire() {
   const [questions, setQuestions] = useState<any[]>([])
   const [topics, setTopics] = useState<Subjects[]>([])
   const [selectedTopic, setSelectedTopic] = useState<string>('')
-  const [studentClasses, setStudentClasses] = useState<Grades[]>([])
-  const [selectedStudentClass, setSelectedStudentClass] = useState<string>('')
-  const fetchSubjects = useCallback(async () => {
-    const response = await getSubjects()
-    if (response) {
-      setTopics(response.success ? response.value : [])
-    }
-  }, [])
+
+  const [studentGrades, setStudentGrades] = useState<Grades[]>([])
+  const [selectedStudentGrades, setSelectedStudentGrades] = useState<string>('')
+
+  const [studentClasses, setStudentClasses] = useState<Classes[]>([])
+  const [selectedStudentClasses, setSelectedStudentClasses] =
+    useState<string>('')
+
+  const [studentYears, setStudentYears] = useState<Years[]>([])
+  const [selectedStudentYears, setSelectedStudentYears] = useState<string>('')
+
+  const fetchData = useCallback(
+    async (
+      fetchFunction: () => Promise<any>,
+      setState: React.Dispatch<React.SetStateAction<any[]>>
+    ) => {
+      const response = await fetchFunction()
+      if (response) {
+        setState(response.success ? response.value : [])
+      }
+    },
+    []
+  )
 
   useEffect(() => {
-    fetchSubjects()
-  }, [fetchSubjects])
-
-  const fetchGrades = useCallback(async () => {
-    const response = await getGrades()
-    if (response) {
-      console.log(response)
-      setStudentClasses(response.success ? response.value : [])
-    }
-  }, [])
-
-  useEffect(() => {
-    fetchGrades()
-  }, [fetchGrades])
+    fetchData(getSubjects, setTopics)
+    fetchData(getGrades, setStudentGrades)
+    fetchData(getClasses, setStudentClasses)
+    fetchData(getYears, setStudentYears)
+  }, [fetchData])
 
   const { toast } = useToast()
 
@@ -113,7 +119,7 @@ export default function NewQuestionnaire() {
   }
   function handleQuestionnaireSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (selectedTopic === '' || selectedStudentClass === '') {
+    if (selectedTopic === '' || selectedStudentGrades === '') {
       toast({
         title: 'Erro ao submeter',
         description: 'Selecione a Disciplina e a Classe dos estudantes.',
@@ -124,20 +130,20 @@ export default function NewQuestionnaire() {
 
     postQuestionnaire({
       title: quizName,
-      yearId: '2025',
-      gradeId: selectedStudentClass,
+      yearId: selectedStudentYears,
+      gradeId: selectedStudentGrades,
       subjectId: selectedTopic,
-      authorId: 1,
+      authorId: user.user.id,
       content: quizName,
       questionsAmount: questions.length,
-      classes: ['A', 'B', 'C'],
+      classes: [selectedStudentClasses],
       questions: questions,
     })
-      .then((response) => {
+      .then(() => {
         toast({
-            title: 'Formulário submetido com sucesso!',
-            variant: 'success'
-          })
+          title: 'Formulário submetido com sucesso!',
+          variant: 'success',
+        })
       })
       .catch((error) => {
         console.error('Erro ao submeter questionário:', error)
@@ -148,20 +154,9 @@ export default function NewQuestionnaire() {
           variant: 'destructive',
         })
       })
-    console.log({
-      title: quizName,
-      yearId: '2025',
-      gradeId: selectedStudentClass,
-      subjectId: selectedTopic,
-      authorId: 1,
-      content: quizName,
-      questionsAmount: questions.length,
-      classes: ['C'],
-      questions: questions,
-    })
-    console.log({ selectedTopic, selectedStudentClass, questions })
+
     setSelectedTopic('')
-    setSelectedStudentClass('')
+    setSelectedStudentGrades('')
     setQuestionsCount(0)
     setQuizName('')
     setContent('')
@@ -256,15 +251,43 @@ export default function NewQuestionnaire() {
                   })}
                 </SelectContent>
               </Select>
-              <Select onValueChange={(val) => setSelectedStudentClass(val)}>
+              <Select onValueChange={(val) => setSelectedStudentGrades(val)}>
                 <SelectTrigger className='bg-white border-none w-[200] align-center'>
                   <SelectValue placeholder='Selecione a Turma' />
+                </SelectTrigger>
+                <SelectContent>
+                  {studentGrades.map((studentClass) => {
+                    return (
+                      <SelectItem value={studentClass.id} key={studentClass.id}>
+                        {studentClass.label}
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+              <Select onValueChange={(val) => setSelectedStudentClasses(val)}>
+                <SelectTrigger className='bg-white border-none w-[200] align-center'>
+                  <SelectValue placeholder='Selecione a Classe' />
                 </SelectTrigger>
                 <SelectContent>
                   {studentClasses.map((studentClass) => {
                     return (
                       <SelectItem value={studentClass.id} key={studentClass.id}>
                         {studentClass.label}
+                      </SelectItem>
+                    )
+                  })}
+                </SelectContent>
+              </Select>
+              <Select onValueChange={(val) => setSelectedStudentYears(val)}>
+                <SelectTrigger className='bg-white border-none w-[200] align-center'>
+                  <SelectValue placeholder='Selecione o Ano' />
+                </SelectTrigger>
+                <SelectContent>
+                  {studentYears.map((studentYear) => {
+                    return (
+                      <SelectItem value={studentYear.id} key={studentYear.id}>
+                        {studentYear.label}
                       </SelectItem>
                     )
                   })}
